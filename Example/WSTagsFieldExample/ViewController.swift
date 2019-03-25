@@ -40,6 +40,8 @@ class ViewController: UIViewController {
         tagsField.backgroundColor = .lightGray
         tagsField.returnKeyType = .continue
         tagsField.delimiter = ""
+        tagsField.keyboardAppearance = .dark
+        tagsField.maxNumberOfTags = 1
 
         tagsField.textDelegate = self
 

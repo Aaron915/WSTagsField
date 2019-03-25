@@ -197,6 +197,13 @@ open class WSTagsField: UIScrollView {
 
         return false
     }
+    
+    open var maxNumberOfTags: Int? {
+        didSet {
+            updateMaxNumberOfTagsState()
+            repositionViews()
+        }
+    }
 
     open fileprivate(set) var tags = [WSTag]()
     internal var tagViews = [WSTagView]()
@@ -415,7 +422,8 @@ open class WSTagsField: UIScrollView {
 
         // Clearing text programmatically doesn't call this automatically
         onTextFieldDidChange(self.textField)
-
+        
+        updateMaxNumberOfTagsState()
         updatePlaceholderTextVisibility()
         repositionViews()
     }
@@ -442,6 +450,7 @@ open class WSTagsField: UIScrollView {
         onDidRemoveTag?(self, removedTag)
 
         updatePlaceholderTextVisibility()
+        updateMaxNumberOfTagsState()
         repositionViews()
     }
 
@@ -752,7 +761,7 @@ extension WSTagsField {
     fileprivate func updatePlaceholderTextVisibility() {
         textField.attributedPlaceholder = (placeholderAlwaysVisible || tags.count == 0) ? attributedPlaceholder() : nil
     }
-
+    
     private func attributedPlaceholder() -> NSAttributedString {
         var attributes: [NSAttributedString.Key: Any]?
         if let placeholderColor = placeholderColor {
@@ -770,7 +779,15 @@ extension WSTagsField {
         }
         return contentInset.top + contentInset.bottom + Constants.STANDARD_ROW_HEIGHT * CGFloat(numberOfLines) + spaceBetweenLines * CGFloat(numberOfLines - 1)
     }
-
+    
+    private func updateMaxNumberOfTagsState() {
+        guard let maxNumberOfTags = maxNumberOfTags, tags.count == maxNumberOfTags else {
+            textField.isEnabled = true
+            return
+        }
+        
+        textField.isEnabled = false
+    }
 }
 
 extension WSTagsField: UITextFieldDelegate {

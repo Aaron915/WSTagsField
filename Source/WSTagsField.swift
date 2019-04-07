@@ -781,6 +781,7 @@ extension WSTagsField {
     }
     
     private func updateMaxNumberOfTagsState() {
+        guard !readOnly else { return }
         guard let maxNumberOfTags = maxNumberOfTags, tags.count == maxNumberOfTags else {
             textField.isEnabled = true
             return
@@ -821,6 +822,7 @@ extension WSTagsField: UITextFieldDelegate {
             tokenizeTextFieldText()
             return false
         }
+        
         return true
     }
 
